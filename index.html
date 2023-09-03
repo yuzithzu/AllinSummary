@@ -6,12 +6,12 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
+            color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            margin: 0;
         }
 
         .app-container {
@@ -146,36 +146,39 @@
             margin-bottom: 10px;
         }
 
-        /* Revised Calculator Styles */
-        .calculator {
-            background-color: #fff;
+        /* Updated Styles for Calculator */
+        .calculator-container {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             padding: 20px;
-            text-align: center;
             margin-top: 20px;
+            text-align: center;
+            display: none;
+            animation: popInOut 0.5s ease-in-out;
         }
 
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            font-size: 18px;
+        @keyframes popInOut {
+            0% {
+                transform: scale(0);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
 
-        button.calculator-button {
+        .calculator-button {
+            background-color: #ff3b30;
+            color: white;
+            border: none;
             padding: 10px 20px;
-            font-size: 18px;
-            margin: 5px;
+            border-radius: 5px;
             cursor: pointer;
+            margin: 5px;
         }
 
-        /* Real-Time Clock Styles */
-        .clock {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 20px;
+        .calculator-button:hover {
+            background-color: #cc2b26;
         }
     </style>
 </head>
@@ -189,7 +192,7 @@
                 <option value="anna">Anna</option>
                 <option value="alma">Alma</option>
                 <option value="jennifer">Jennifer</option>
-                <option value="juice">Juice</option> <!-- Added Juice -->
+                <option value="juice">Juice</option>
             </select>
         </div>
         
@@ -202,12 +205,13 @@
             <label for="salesAmount">Enter Sales Amount:</label>
             <input type="number" id="salesAmount">
         </div>
-        
+
+        <!-- Added Expenses Input -->
         <div class="form-group">
-            <label for="expensesAmount">Enter Expenses Amount:</label>
+            <label for="expensesAmount">Enter Expenses:</label>
             <input type="number" id="expensesAmount">
         </div>
-
+        
         <div class="form-group">
             <button onclick="addSales()">Add Sales</button>
         </div>
@@ -220,8 +224,8 @@
                         <th>Date</th>
                         <th>Salesperson</th>
                         <th>Sales Amount</th>
-                        <th>Expenses</th> <!-- Added Expenses Column -->
-                        <th>Result</th> <!-- Added Result Column -->
+                        <th>Expenses</th>
+                        <th>Result</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
@@ -284,19 +288,14 @@
             </div>
         </div>
 
-        <!-- Back button to index -->
-        <div class="form-group">
-            <button onclick="goToIndex()">BACK</button>
-        </div>
-
-        <!-- Revised Calculator -->
-        <div class="calculator">
+        <!-- Calculator Pop-up -->
+        <div class="calculator-container" id="calculatorContainer">
             <h2>Calculator</h2>
-            <input type="text" id="calcDisplay" readonly>
+            <input type="text" id="calcDisplay" disabled>
             <div>
-                <button class="calculator-button" onclick="appendToCalcDisplay('1')">1</button>
-                <button class="calculator-button" onclick="appendToCalcDisplay('2')">2</button>
-                <button class="calculator-button" onclick="appendToCalcDisplay('3')">3</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('7')">7</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('8')">8</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('9')">9</button>
                 <button class="calculator-button" onclick="appendToCalcDisplay('+')">+</button>
             </div>
             <div>
@@ -306,14 +305,14 @@
                 <button class="calculator-button" onclick="appendToCalcDisplay('-')">-</button>
             </div>
             <div>
-                <button class="calculator-button" onclick="appendToCalcDisplay('7')">7</button>
-                <button class="calculator-button" onclick="appendToCalcDisplay('8')">8</button>
-                <button class="calculator-button" onclick="appendToCalcDisplay('9')">9</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('1')">1</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('2')">2</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('3')">3</button>
                 <button class="calculator-button" onclick="appendToCalcDisplay('*')">*</button>
             </div>
             <div>
-                <button class="calculator-button" onclick="appendToCalcDisplay('0')">0</button>
                 <button class="calculator-button" onclick="clearCalcDisplay()">C</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('0')">0</button>
                 <button class="calculator-button" onclick="calculate()">=</button>
                 <button class="calculator-button" onclick="appendToCalcDisplay('/')">/</button>
             </div>
@@ -321,6 +320,11 @@
 
         <!-- Real-Time Clock -->
         <div class="clock" id="clock"></div>
+        
+        <!-- Back button to index -->
+        <div class="form-group">
+            <button onclick="goToIndex()">BACK</button>
+        </div>
     </div>
     
     <script>
@@ -330,9 +334,9 @@
             const salesPerson = document.getElementById("salesPerson").value;
             const salesDate = document.getElementById("salesDate").value;
             const salesAmount = parseFloat(document.getElementById("salesAmount").value);
-            const expensesAmount = parseFloat(document.getElementById("expensesAmount").value); // Added Expenses Amount
-            
-            if (!salesDate || isNaN(salesAmount)) {
+            const expensesAmount = parseFloat(document.getElementById("expensesAmount").value);
+
+            if (!salesDate || isNaN(salesAmount) || isNaN(expensesAmount)) {
                 alert("Please enter valid data.");
                 return;
             }
@@ -341,7 +345,7 @@
                 date: salesDate,
                 person: salesPerson,
                 amount: salesAmount,
-                expenses: expensesAmount // Added Expenses Amount
+                expenses: expensesAmount
             };
             
             let salesData = JSON.parse(localStorage.getItem("salesData")) || [];
@@ -366,12 +370,13 @@
             
             salesData.forEach((record, index) => {
                 const row = document.createElement("tr");
+                const result = record.amount - record.expenses;
                 row.innerHTML = `
                     <td>${record.date}</td>
                     <td>${record.person}</td>
-                    <td>${record.amount}</td>
-                    <td>${record.expenses}</td> <!-- Added Expenses Column -->
-                    <td>${record.amount - record.expenses}</td> <!-- Added Result Column -->
+                    <td>${record.amount.toFixed(2)}</td>
+                    <td>${record.expenses.toFixed(2)}</td>
+                    <td>${result.toFixed(2)}</td>
                     <td><button onclick="deleteSales(${index})">Delete</button></td>
                 `;
                 tableBody.appendChild(row);
@@ -396,7 +401,7 @@
                 "anna": Array(12).fill(0),
                 "alma": Array(12).fill(0),
                 "jennifer": Array(12).fill(0),
-                "juice": Array(12).fill(0), // Added Juice
+                "juice": Array(12).fill(0),
                 "combined": Array(12).fill(0)
             };
     
@@ -405,7 +410,8 @@
                 const monthIndex = new Date(record.date).getMonth();
     
                 salesTotalsByPerson[person][monthIndex] += record.amount;
-                salesTotalsByPerson["combined"][monthIndex] += record.amount;
+                salesTotalsByPerson[person][12] += record.expenses;
+                salesTotalsByPerson["combined"][monthIndex] += record.amount - record.expenses;
             });
     
             for (const person in salesTotalsByPerson) {
@@ -413,11 +419,10 @@
     
                 if (totalSales > 0) {
                     const row = document.createElement("tr");
+                    row.innerHTML = `<td>${person}</td>${getMonthlyTotalCells(salesTotalsByPerson[person])}`;
                     if (person === "combined") {
-                        row.innerHTML = `<td>Combined Total</td>${getMonthlyTotalCells(salesTotalsByPerson[person])}`;
                         combinedMonthlyTotalsBody.appendChild(row);
                     } else {
-                        row.innerHTML = `<td>${person}</td>${getMonthlyTotalCells(salesTotalsByPerson[person])}`;
                         individualMonthlyTotalsBody.appendChild(row);
                     }
                 }
@@ -431,42 +436,48 @@
             }
             return cells;
         }
-        
+
+        // Calculator Functions
+        let calcDisplay = document.getElementById("calcDisplay");
+        let calculatorContainer = document.getElementById("calculatorContainer");
+
+        function appendToCalcDisplay(value) {
+            calcDisplay.value += value;
+        }
+
+        function clearCalcDisplay() {
+            calcDisplay.value = "";
+        }
+
+        function calculate() {
+            try {
+                calcDisplay.value = eval(calcDisplay.value);
+            } catch (error) {
+                calcDisplay.value = "Error";
+            }
+        }
+
+        function toggleCalculator() {
+            calculatorContainer.style.display = (calculatorContainer.style.display === "none") ? "block" : "none";
+        }
+
+        // Real-Time Clock
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, "0");
+            const minutes = now.getMinutes().toString().padStart(2, "0");
+            const seconds = now.getSeconds().toString().padStart(2, "0");
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            document.getElementById("clock").textContent = timeString;
+        }
+
+        setInterval(updateTime, 1000); // Update the clock every second
+
         function goToIndex() {
             window.location.href = "index.html"
         }
         
         updateSalesTable(); // Initial update of sales table
-
-        /* Calculator Functions */
-        function appendToCalcDisplay(value) {
-            const calcDisplay = document.getElementById('calcDisplay');
-            calcDisplay.value += value;
-        }
-
-        function clearCalcDisplay() {
-            const calcDisplay = document.getElementById('calcDisplay');
-            calcDisplay.value = '';
-        }
-
-        function calculate() {
-            const calcDisplay = document.getElementById('calcDisplay');
-            try {
-                calcDisplay.value = eval(calcDisplay.value);
-            } catch (error) {
-                calcDisplay.value = 'Error';
-            }
-        }
-
-        /* Real-Time Clock */
-        function updateTime() {
-            const clock = document.getElementById('clock');
-            const now = new Date();
-            const timeString = now.toLocaleTimeString();
-            clock.textContent = timeString;
-        }
-
-        setInterval(updateTime, 1000);
         updateTime(); // Initial update of the clock
     </script>
 </body>
