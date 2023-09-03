@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Summary Report</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .app-container {
+            width: 90%;
+            max-width: 800px;
+            padding: 20px;
+            background-color: #000;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 255, 0, 0.5);
+            text-align: center;
+        }
+
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #0f0;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #0f0;
+        }
+
+        .form-group input[type="date"],
+        .form-group input[type="number"],
+        .form-group select {
+            padding: 8px;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            outline: none;
+            background-color: #000;
+            color: #0f0;
+        }
+
+        .form-group button {
+            background-color: #00f;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .sales-records-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .sales-records-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .sales-records-table th,
+        .sales-records-table td {
+            border: 1px solid #0f0;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .sales-records-table th {
+            font-weight: bold;
+            background-color: #00f;
+        }
+
+        .sales-records-table button {
+            background-color: #f00;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .monthly-totals-container {
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            margin-top: 20px;
+            padding: 10px;
+            text-align: center;
+            background-color: #000;
+        }
+
+        .monthly-totals-table {
+            width: auto;
+            margin-top: 20px;
+        }
+
+        .monthly-totals-table th,
+        .monthly-totals-table td {
+            border: 1px solid #0f0;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .monthly-totals-table th {
+            font-weight: bold;
+            background-color: #00f;
+        }
+
+        .monthly-results {
+            display: none;
+        }
+
+        .show-monthly {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .generate-button {
+            background-color: #f00;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <h1 class="header">Salon Sales App</h1>
+        
+        <div class="form-group">
+            <label for="salesPerson">Select Salesperson:</label>
+            <select id="salesPerson">
+                <option value="anna">Anna</option>
+                <option value="alma">Alma</option>
+                <option value="jennifer">Jennifer</option>
+                <option value="juice">Juice</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="salesDate">Select Date:</label>
+            <input type="date" id="salesDate">
+        </div>
+        
+        <div class="form-group">
+            <label for="salesAmount">Enter Sales Amount:</label>
+            <input type="number" id="salesAmount">
+        </div>
+
+        <div class="form-group">
+            <label for="expensesAmount">Enter Expenses:</label>
+            <input type="number" id="expensesAmount">
+        </div>
+        
+        <div class="form-group">
+            <button onclick="addSales()">Add Sales</button>
+        </div>
+        
+        <div class="sales-records-container">
+            <h2>Sales Records</h2>
+            <table class="sales-records-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Salesperson</th>
+                        <th>Sales Amount</th>
+                        <th>Expenses</th>
+                        <th>Result</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="salesTableBody"></tbody>
+            </table>
+        </div>
+        
+        <div class="monthly-totals-container">
+            <button class="generate-button" onclick="showMonthlyResults()">Generate Monthly Totals</button>
+            <div class="monthly-results" id="monthlyResults">
+                <div class="show-monthly">
+                    <div class="monthly-totals-container">
+                        <h2>Combined Monthly Totals</h2>
+                        <table class="monthly-totals-table">
+                            <thead>
+                                <tr>
+                                    <th>Salesperson</th>
+                                    <th>Jan</th>
+                                    <th>Feb</th>
+                                    <th>Mar</th>
+                                    <th>Apr</th>
+                                    <th>May</th>
+                                    <th>Jun</th>
+                                    <th>Jul</th>
+                                    <th>Aug</th>
+                                    <th>Sep</th>
+                                    <th>Oct</th>
+                                    <th>Nov</th>
+                                    <th>Dec</th>
+                                </tr>
+                            </thead>
+                            <tbody id="monthlyTotalsBody"></tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="monthly-totals-container">
+                        <h2>Individual Salesperson Monthly Totals</h2>
+                        <table class="monthly-totals-table">
+                            <thead>
+                                <tr>
+                                    <th>Salesperson</th>
+                                    <th>Jan</th>
+                                    <th>Feb</th>
+                                    <th>Mar</th>
+                                    <th>Apr</th>
+                                    <th>May</th>
+                                    <th>Jun</th>
+                                    <th>Jul</th>
+                                    <th>Aug</th>
+                                    <th>Sep</th>
+                                    <th>Oct</th>
+                                    <th>Nov</th>
+                                    <th>Dec</th>
+                                </tr>
+                            </thead>
+                            <tbody id="individualMonthlyTotalsBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back button to index -->
+        <div class="form-group">
+            <button onclick="goToIndex()">BACK</button>
+        </div>
+    </div>
+    
+    <script>
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        function addSales() {
+            const salesPerson = document.getElementById("salesPerson").value;
+            const salesDate = document.getElementById("salesDate").value;
+            const salesAmount = parseFloat(document.getElementById("salesAmount").value);
+            const expensesAmount = parseFloat(document.getElementById("expensesAmount").value) || 0;
+            
+            if (!salesDate || isNaN(salesAmount)) {
+                alert("Please enter valid data.");
+                return;
+            }
+            
+            const salesRecord = {
+                date: salesDate,
+                person: salesPerson,
+                amount: salesAmount,
+                expenses: expensesAmount,
+                result: salesAmount - expensesAmount
+            };
+            
+            let salesData = JSON.parse(localStorage.getItem("salesData")) || [];
+            salesData.push(salesRecord);
+            localStorage.setItem("salesData", JSON.stringify(salesData));
+            
+            updateSalesTable();
+        }
+        
+        function deleteSales(index) {
+            let salesData = JSON.parse(localStorage.getItem("salesData")) || [];
+            salesData.splice(index, 1);
+            localStorage.setItem("salesData", JSON.stringify(salesData));
+            
+            updateSalesTable();
+        }
+        
+        function updateSalesTable() {
+            const salesData = JSON.parse(localStorage.getItem("salesData")) || [];
+            const tableBody = document.getElementById("salesTableBody");
+            tableBody.innerHTML = "";
+            
+            salesData.forEach((record, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.person}</td>
+                    <td>${record.amount}</td>
+                    <td>${record.expenses}</td>
+                    <td>${record.result}</td>
+                    <td><button onclick="deleteSales(${index})">Delete</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function showMonthlyResults() {
+            updateMonthlyTotalsTable();
+            const monthlyResults = document.getElementById("monthlyResults");
+            monthlyResults.classList.add("show-monthly");
+        }
+        
+        function updateMonthlyTotalsTable() {
+            const salesData = JSON.parse(localStorage.getItem("salesData")) || [];
+            const combinedMonthlyTotalsBody = document.getElementById("monthlyTotalsBody");
+            const individualMonthlyTotalsBody = document.getElementById("individualMonthlyTotalsBody");
+            
+            combinedMonthlyTotalsBody.innerHTML = "";
+            individualMonthlyTotalsBody.innerHTML = "";
+    
+            let salesTotalsByPerson = {
+                "anna": Array(12).fill(0),
+                "alma": Array(12).fill(0),
+                "jennifer": Array(12).fill(0),
+                "juice": Array(12).fill(0),
+                "combined": Array(12).fill(0)
+            };
+    
+            salesData.forEach((record) => {
+                const person = record.person;
+                const monthIndex = new Date(record.date).getMonth();
+    
+                salesTotalsByPerson[person][monthIndex] += record.amount - record.expenses;
+                salesTotalsByPerson["combined"][monthIndex] += record.amount - record.expenses;
+            });
+    
+            for (const person in salesTotalsByPerson) {
+                const totalSales = salesTotalsByPerson[person].reduce((total, amount) => total + amount, 0);
+    
+                if (totalSales > 0) {
+                    const row = document.createElement("tr");
+                    if (person === "combined") {
+                        row.innerHTML = `<td>Combined Total</td>${getMonthlyTotalCells(salesTotalsByPerson[person])}`;
+                        combinedMonthlyTotalsBody.appendChild(row);
+                    } else {
+                        row.innerHTML = `<td>${person}</td>${getMonthlyTotalCells(salesTotalsByPerson[person])}`;
+                        individualMonthlyTotalsBody.appendChild(row);
+                    }
+                }
+            }
+        }
+        
+        function getMonthlyTotalCells(monthlyTotals) {
+            let cells = '';
+            for (const total of monthlyTotals) {
+                cells += `<td>${total.toFixed(2)}</td>`;
+            }
+            return cells;
+        }
+        
+        function goToIndex() {
+            window.location.href = "index.html"
+        }
+        
+        updateSalesTable(); // Initial update of sales table
+    </script>
+</body>
+</html>
