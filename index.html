@@ -1,6 +1,3 @@
-Certainly, here's the complete code for your Salon Sales App, including HTML, CSS, and JavaScript, all in one file:
-
-```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -203,9 +200,7 @@ Certainly, here's the complete code for your Salon Sales App, including HTML, CS
         
         <div class="form-group">
             <label for="salesAmount">Enter Sales Amount:</label>
-            <input type="number"
-
- id="salesAmount">
+            <input type="number" id="salesAmount">
         </div>
         
         <div class="form-group">
@@ -329,155 +324,152 @@ Certainly, here's the complete code for your Salon Sales App, including HTML, CS
     </div>
     
     <script>
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        
-        function addSales() {
-            const salesPerson = document.getElementById("salesPerson").value;
-            const salesDate = document.getElementById("salesDate").value;
-            const salesAmount = parseFloat(document.getElementById("salesAmount").value);
-            const expensesAmount = parseFloat(document.getElementById("expensesAmount").value); // Added Expenses Amount
-            
-            if (!salesDate || isNaN(salesAmount)) {
-                alert("Please enter valid data.");
-                return;
-            }
-            
-            const salesRecord = {
-                date: salesDate,
-                person: salesPerson,
-                amount: salesAmount,
-                expenses: expensesAmount // Added Expenses Amount
-            };
-            
-            let salesData = JSON.parse(localStorage.getItem("salesData")) || [];
-            salesData.push(salesRecord);
-            localStorage.setItem("salesData", JSON.stringify(salesData));
-            
-            updateSalesTable();
-        }
-        
-        function deleteSales(index) {
-            let salesData = JSON.parse(localStorage.getItem("salesData")) || [];
-            salesData.splice(index, 1);
-            localStorage.setItem("salesData", JSON.stringify(salesData));
-            
-            updateSalesTable();
-        }
-        
-        function updateSalesTable() {
-            const salesData = JSON.parse(localStorage.getItem("salesData")) || [];
-            const tableBody = document.getElementById("salesTableBody");
-            tableBody.innerHTML = "";
-            
-            salesData.forEach((record, index) => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${record.date}</td>
-                    <td>${record.person}</td>
-                    <td>${record.amount}</td>
-                    <td>${record.expenses}</td> <!-- Added Expenses Column -->
-                    <td>${record.amount - record.expenses}</td> <!-- Added Result Column -->
-                    <td><button onclick="deleteSales(${index})">Delete</button></td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-        
-        function showMonthlyResults() {
-            updateMonthlyTotalsTable();
-            const monthlyResults = document.getElementById("monthlyResults");
-            monthlyResults.classList.add("show-monthly");
-        }
-        
-        function updateMonthlyTotalsTable() {
-            const sales
 
-Data = JSON.parse(localStorage.getItem("salesData")) || [];
-            const combinedMonthlyTotalsBody = document.getElementById("monthlyTotalsBody");
-            const individualMonthlyTotalsBody = document.getElementById("individualMonthlyTotalsBody");
-            
-            combinedMonthlyTotalsBody.innerHTML = "";
-            individualMonthlyTotalsBody.innerHTML = "";
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     
-            let salesTotalsByPerson = {
-                "anna": Array(12).fill(0),
-                "alma": Array(12).fill(0),
-                "jennifer": Array(12).fill(0),
-                "juice": Array(12).fill(0), // Added Juice
-                "combined": Array(12).fill(0)
-            };
+    function addSales() {
+        const salesPerson = document.getElementById("salesPerson").value;
+        const salesDate = document.getElementById("salesDate").value;
+        const salesAmount = parseFloat(document.getElementById("salesAmount").value);
+        const expensesAmount = parseFloat(document.getElementById("expensesAmount").value); // Added Expenses Amount
+        
+        if (!salesDate || isNaN(salesAmount)) {
+            alert("Please enter valid data.");
+            return;
+        }
+        
+        const salesRecord = {
+            date: salesDate,
+            person: salesPerson,
+            amount: salesAmount,
+            expenses: expensesAmount // Added Expenses Amount
+        };
+        
+        let salesData = JSON.parse(localStorage.getItem("salesData")) || [];
+        salesData.push(salesRecord);
+        localStorage.setItem("salesData", JSON.stringify(salesData));
+        
+        updateSalesTable();
+    }
     
-            salesData.forEach((record) => {
-                const person = record.person;
-                const monthIndex = new Date(record.date).getMonth();
+    function deleteSales(index) {
+        let salesData = JSON.parse(localStorage.getItem("salesData")) || [];
+        salesData.splice(index, 1);
+        localStorage.setItem("salesData", JSON.stringify(salesData));
+        
+        updateSalesTable();
+    }
     
-                salesTotalsByPerson[person][monthIndex] += record.amount;
-                salesTotalsByPerson["combined"][monthIndex] += record.amount;
-            });
+    function updateSalesTable() {
+        const salesData = JSON.parse(localStorage.getItem("salesData")) || [];
+        const tableBody = document.getElementById("salesTableBody");
+        tableBody.innerHTML = "";
+        
+        salesData.forEach((record, index) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${record.date}</td>
+                <td>${record.person}</td>
+                <td>${record.amount}</td>
+                <td>${record.expenses}</td> <!-- Added Expenses Column -->
+                <td>${record.amount - record.expenses}</td> <!-- Added Result Column -->
+                <td><button onclick="deleteSales(${index})">Delete</button></td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
     
-            for (const person in salesTotalsByPerson) {
-                const totalSales = salesTotalsByPerson[person].reduce((total, amount) => total + amount, 0);
+    function showMonthlyResults() {
+        updateMonthlyTotalsTable();
+        const monthlyResults = document.getElementById("monthlyResults");
+        monthlyResults.classList.add("show-monthly");
+    }
     
-                if (totalSales > 0) {
-                    const row = document.createElement("tr");
-                    if (person === "combined") {
-                        row.innerHTML = `<td>Combined Total</td>${getMonthlyTotalCells(salesTotalsByPerson[person])}`;
-                        combinedMonthlyTotalsBody.appendChild(row);
-                    } else {
-                        row.innerHTML = `<td>${person}</td>${getMonthlyTotalCells(salesTotalsByPerson[person])}`;
-                        individualMonthlyTotalsBody.appendChild(row);
-                    }
+    function updateMonthlyTotalsTable() {
+        const salesData = JSON.parse(localStorage.getItem("salesData")) || [];
+        const combinedMonthlyTotalsBody = document.getElementById("monthlyTotalsBody");
+        const individualMonthlyTotalsBody = document.getElementById("individualMonthlyTotalsBody");
+        
+        combinedMonthlyTotalsBody.innerHTML = "";
+        individualMonthlyTotalsBody.innerHTML = "";
+
+        let salesTotalsByPerson = {
+            "anna": Array(12).fill(0),
+            "alma": Array(12).fill(0),
+            "jennifer": Array(12).fill(0),
+            "juice": Array(12).fill(0), // Added Juice
+            "combined": Array(12).fill(0)
+        };
+
+        salesData.forEach((record) => {
+            const person = record.person;
+            const monthIndex = new Date(record.date).getMonth();
+
+            salesTotalsByPerson[person][monthIndex] += record.amount;
+            salesTotalsByPerson["combined"][monthIndex] += record.amount;
+        });
+
+        for (const person in salesTotalsByPerson) {
+            const totalSales = salesTotalsByPerson[person].reduce((total, amount) => total + amount, 0);
+
+            if (totalSales > 0) {
+                const row = document.createElement("tr");
+                if (person === "combined") {
+                    row.innerHTML = `<td>Combined Total</td>${getMonthlyTotalCells(salesTotalsByPerson[person])}`;
+                    combinedMonthlyTotalsBody.appendChild(row);
+                } else {
+                    row.innerHTML = `<td>${person}</td>${getMonthlyTotalCells(salesTotalsByPerson[person])}`;
+                    individualMonthlyTotalsBody.appendChild(row);
                 }
             }
         }
-        
-        function getMonthlyTotalCells(monthlyTotals) {
-            let cells = '';
-            for (const total of monthlyTotals) {
-                cells += `<td>${total.toFixed(2)}</td>`;
-            }
-            return cells;
+    }
+    
+    function getMonthlyTotalCells(monthlyTotals) {
+        let cells = '';
+        for (const total of monthlyTotals) {
+            cells += `<td>${total.toFixed(2)}</td>`;
         }
-        
-        function goToIndex() {
-            window.location.href = "index.html"
-        }
-        
-        updateSalesTable(); // Initial update of sales table
+        return cells;
+    }
+    
+    function goToIndex() {
+        window.location.href = "index.html"
+    }
+    
+    updateSalesTable(); // Initial update of sales table
 
-        /* Calculator Functions */
-        function appendToCalcDisplay(value) {
-            const calcDisplay = document.getElementById('calcDisplay');
-            calcDisplay.value += value;
-        }
+    /* Calculator Functions */
+    function appendToCalcDisplay(value) {
+        const calcDisplay = document.getElementById('calcDisplay');
+        calcDisplay.value += value;
+    }
 
-        function clearCalcDisplay() {
-            const calcDisplay = document.getElementById('calcDisplay');
-            calcDisplay.value = '';
-        }
+    function clearCalcDisplay() {
+        const calcDisplay = document.getElementById('calcDisplay');
+        calcDisplay.value = '';
+    }
 
-        function calculate() {
-            const calcDisplay = document.getElementById('calcDisplay');
-            try {
-                calcDisplay.value = eval(calcDisplay.value);
-            } catch (error) {
-                calcDisplay.value = 'Error';
-            }
+    function calculate() {
+        const calcDisplay = document.getElementById('calcDisplay');
+        try {
+            calcDisplay.value = eval(calcDisplay.value);
+        } catch (error) {
+            calcDisplay.value = 'Error';
         }
+    }
 
-        /* Real-Time Clock */
-        function updateTime() {
-            const clock = document.getElementById('clock');
-            const now = new Date();
-            const timeString = now.toLocaleTimeString();
-            clock.textContent = timeString;
-        }
+    /* Real-Time Clock */
+    function updateTime() {
+        const clock = document.getElementById('clock');
+        const now = new Date();
+        const timeString = now.toLocaleTimeString();
+        clock.textContent = timeString;
+    }
 
-        setInterval(updateTime, 1000);
-        updateTime(); // Initial update of the clock
-    </script>
+    setInterval(updateTime, 1000);
+    updateTime(); // Initial update of the clock
+   </script>
+
 </body>
 </html>
-```
-
-This code includes HTML, CSS, and JavaScript sections all in one file.
