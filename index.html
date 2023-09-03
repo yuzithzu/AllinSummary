@@ -1,28 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Summary Report</title>
+    <title>Salon Sales App</title>
     <style>
         body {
-            font-family: 'Courier New', monospace;
-            background-color: #000;
-            color: #0f0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
             margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
         .app-container {
             width: 90%;
             max-width: 800px;
             padding: 20px;
-            background-color: #000;
+            background-color: white;
             border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 255, 0, 0.5);
-            text-align: center;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
         }
 
         .header {
@@ -30,47 +28,43 @@
             font-weight: bold;
             text-align: center;
             margin-bottom: 20px;
-            color: #0f0;
         }
 
         .form-group {
             display: flex;
-            flex-direction: column;
             margin-bottom: 15px;
+            align-items: center;
         }
 
         .form-group label {
+            width: 120px;
             font-weight: bold;
-            margin-bottom: 5px;
-            color: #0f0;
+            margin-right: 10px;
         }
 
         .form-group input[type="date"],
         .form-group input[type="number"],
         .form-group select {
+            flex-grow: 1;
             padding: 8px;
-            border: 1px solid #0f0;
+            border: 1px solid #ccc;
             border-radius: 5px;
             outline: none;
-            background-color: #000;
-            color: #0f0;
         }
 
         .form-group button {
-            background-color: #00f;
-            color: #fff;
+            background-color: #ff3b30;
+            color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px;
-            font-weight: bold;
         }
 
         .sales-records-container {
             max-height: 300px;
             overflow-y: auto;
-            border: 1px solid #0f0;
+            border: 1px solid #ccc;
             border-radius: 5px;
             margin-top: 20px;
         }
@@ -82,33 +76,35 @@
 
         .sales-records-table th,
         .sales-records-table td {
-            border: 1px solid #0f0;
+            border: 1px solid #ccc;
             padding: 8px;
             text-align: center;
         }
 
         .sales-records-table th {
             font-weight: bold;
-            background-color: #00f;
+            background-color: #f2f2f2;
         }
 
         .sales-records-table button {
-            background-color: #f00;
-            color: #fff;
+            background-color: #ff3b30;
+            color: white;
             border: none;
             padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
-            font-weight: bold;
         }
 
         .monthly-totals-container {
-            border: 1px solid #0f0;
+            border: 1px solid #ccc;
             border-radius: 5px;
             margin-top: 20px;
             padding: 10px;
-            text-align: center;
-            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: auto;
+            width: 100%;
         }
 
         .monthly-totals-table {
@@ -118,18 +114,20 @@
 
         .monthly-totals-table th,
         .monthly-totals-table td {
-            border: 1px solid #0f0;
+            border: 1px solid #ccc;
             padding: 8px;
             text-align: center;
         }
 
         .monthly-totals-table th {
             font-weight: bold;
-            background-color: #00f;
+            background-color: #f2f2f2;
         }
 
         .monthly-results {
             display: none;
+            flex-direction: column;
+            align-items: center;
         }
 
         .show-monthly {
@@ -139,14 +137,45 @@
         }
 
         .generate-button {
-            background-color: #f00;
-            color: #fff;
+            background-color: #007bff;
+            color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
             margin-bottom: 10px;
+        }
+
+        /* Revised Calculator Styles */
+        .calculator {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        button.calculator-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        /* Real-Time Clock Styles */
+        .clock {
+            font-size: 24px;
             font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -160,7 +189,7 @@
                 <option value="anna">Anna</option>
                 <option value="alma">Alma</option>
                 <option value="jennifer">Jennifer</option>
-                <option value="juice">Juice</option>
+                <option value="juice">Juice</option> <!-- Added Juice -->
             </select>
         </div>
         
@@ -173,12 +202,12 @@
             <label for="salesAmount">Enter Sales Amount:</label>
             <input type="number" id="salesAmount">
         </div>
-
+        
         <div class="form-group">
-            <label for="expensesAmount">Enter Expenses:</label>
+            <label for="expensesAmount">Enter Expenses Amount:</label>
             <input type="number" id="expensesAmount">
         </div>
-        
+
         <div class="form-group">
             <button onclick="addSales()">Add Sales</button>
         </div>
@@ -191,8 +220,8 @@
                         <th>Date</th>
                         <th>Salesperson</th>
                         <th>Sales Amount</th>
-                        <th>Expenses</th>
-                        <th>Result</th>
+                        <th>Expenses</th> <!-- Added Expenses Column -->
+                        <th>Result</th> <!-- Added Result Column -->
                         <th>Delete</th>
                     </tr>
                 </thead>
@@ -259,6 +288,39 @@
         <div class="form-group">
             <button onclick="goToIndex()">BACK</button>
         </div>
+
+        <!-- Revised Calculator -->
+        <div class="calculator">
+            <h2>Calculator</h2>
+            <input type="text" id="calcDisplay" readonly>
+            <div>
+                <button class="calculator-button" onclick="appendToCalcDisplay('1')">1</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('2')">2</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('3')">3</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('+')">+</button>
+            </div>
+            <div>
+                <button class="calculator-button" onclick="appendToCalcDisplay('4')">4</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('5')">5</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('6')">6</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('-')">-</button>
+            </div>
+            <div>
+                <button class="calculator-button" onclick="appendToCalcDisplay('7')">7</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('8')">8</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('9')">9</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('*')">*</button>
+            </div>
+            <div>
+                <button class="calculator-button" onclick="appendToCalcDisplay('0')">0</button>
+                <button class="calculator-button" onclick="clearCalcDisplay()">C</button>
+                <button class="calculator-button" onclick="calculate()">=</button>
+                <button class="calculator-button" onclick="appendToCalcDisplay('/')">/</button>
+            </div>
+        </div>
+
+        <!-- Real-Time Clock -->
+        <div class="clock" id="clock"></div>
     </div>
     
     <script>
@@ -268,7 +330,7 @@
             const salesPerson = document.getElementById("salesPerson").value;
             const salesDate = document.getElementById("salesDate").value;
             const salesAmount = parseFloat(document.getElementById("salesAmount").value);
-            const expensesAmount = parseFloat(document.getElementById("expensesAmount").value) || 0;
+            const expensesAmount = parseFloat(document.getElementById("expensesAmount").value); // Added Expenses Amount
             
             if (!salesDate || isNaN(salesAmount)) {
                 alert("Please enter valid data.");
@@ -279,8 +341,7 @@
                 date: salesDate,
                 person: salesPerson,
                 amount: salesAmount,
-                expenses: expensesAmount,
-                result: salesAmount - expensesAmount
+                expenses: expensesAmount // Added Expenses Amount
             };
             
             let salesData = JSON.parse(localStorage.getItem("salesData")) || [];
@@ -309,8 +370,8 @@
                     <td>${record.date}</td>
                     <td>${record.person}</td>
                     <td>${record.amount}</td>
-                    <td>${record.expenses}</td>
-                    <td>${record.result}</td>
+                    <td>${record.expenses}</td> <!-- Added Expenses Column -->
+                    <td>${record.amount - record.expenses}</td> <!-- Added Result Column -->
                     <td><button onclick="deleteSales(${index})">Delete</button></td>
                 `;
                 tableBody.appendChild(row);
@@ -335,7 +396,7 @@
                 "anna": Array(12).fill(0),
                 "alma": Array(12).fill(0),
                 "jennifer": Array(12).fill(0),
-                "juice": Array(12).fill(0),
+                "juice": Array(12).fill(0), // Added Juice
                 "combined": Array(12).fill(0)
             };
     
@@ -343,8 +404,8 @@
                 const person = record.person;
                 const monthIndex = new Date(record.date).getMonth();
     
-                salesTotalsByPerson[person][monthIndex] += record.amount - record.expenses;
-                salesTotalsByPerson["combined"][monthIndex] += record.amount - record.expenses;
+                salesTotalsByPerson[person][monthIndex] += record.amount;
+                salesTotalsByPerson["combined"][monthIndex] += record.amount;
             });
     
             for (const person in salesTotalsByPerson) {
@@ -376,6 +437,37 @@
         }
         
         updateSalesTable(); // Initial update of sales table
+
+        /* Calculator Functions */
+        function appendToCalcDisplay(value) {
+            const calcDisplay = document.getElementById('calcDisplay');
+            calcDisplay.value += value;
+        }
+
+        function clearCalcDisplay() {
+            const calcDisplay = document.getElementById('calcDisplay');
+            calcDisplay.value = '';
+        }
+
+        function calculate() {
+            const calcDisplay = document.getElementById('calcDisplay');
+            try {
+                calcDisplay.value = eval(calcDisplay.value);
+            } catch (error) {
+                calcDisplay.value = 'Error';
+            }
+        }
+
+        /* Real-Time Clock */
+        function updateTime() {
+            const clock = document.getElementById('clock');
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            clock.textContent = timeString;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime(); // Initial update of the clock
     </script>
 </body>
 </html>
